@@ -89,10 +89,16 @@ Ext.define('ProgressDemo.view.main.Main', {
 									html: "&nbsp;",
 									width: 80
 								}, {
-									xtype: 'box',
+									xtype: 'container',
 									flex: 1,
-									html: "^<br/><span id='targetNum'></span>",
-									style: "text-align: center; font-weight:bold;"
+									layout: {
+										type: 'auto'
+									},
+									items: [{
+										target: "moveable",
+										xtype: 'box',
+										html: "<span style='text-align:center; font-weight:bold;width:30px;display:inline-block;'>^<br/><span id='targetNum'></span></span>"
+									}]
 								}, {
 									xtype: 'box',
 									width: 100,
@@ -135,6 +141,7 @@ Ext.define('ProgressDemo.view.main.Main', {
 											
 											var successCmp = cmp.down('box[target="success"]');
 											var diffCmp = cmp.down('box[target="diff"]');
+											
 											successCmp.setHtml("Target<br/>$" + target);
 											diffCmp.setHtml(Ext.String.format(diffCmp.htmlTpl, diff));
 											x = start;
@@ -164,25 +171,49 @@ Ext.define('ProgressDemo.view.main.Main', {
 							listeners: {
 								afterrender: {
 									fn: function(cmp) {
-										
+										var me = this;
+
 										me.progressBar = Ext.create('Ext.ProgressBar', {
 											renderTo: cmp.down('box[target="progress"]').getEl(),
 											height: 100,
 											animate: true,
-											textEl: "targetNum"
+											textEl: "targetNum",
+											listeners: {
+												update: {
+													fn: function(pbar, value, text) {
+														var pbarEl;
+														var moveableEl;
+														var pbarDivEl;
+														if(pbar.el) {
+															pbarEl = pbar.getEl();
+															pbarDivEl = Ext.get(pbarEl.select('div[class~="x-progress-bar"]').elements[0]);
+															moveableEl = Ext.get(pbar.win.down('box[target="moveable"]').getEl().select('span').elements[0]);
+															if(moveableEl && pbarDivEl) {
+																moveableEl.alignTo(pbarDivEl, "br", [-12, 0]);	
+															}
+														}
+													},
+													scope: me
+												}
+											},
+											win: cmp
 										});						
 										var x, start = 0, stop = 56, target = 125, progVal, diff = target - start;
 										
 										var successCmp = cmp.down('box[target="success"]');
 										var diffCmp = cmp.down('box[target="diff"]');
+										
 										successCmp.setHtml("Target<br/>$" + target);
+										var updateText;
 										diffCmp.setHtml(Ext.String.format(diffCmp.htmlTpl, diff));
 										x = start;
 										
 										var intervalId = setInterval(function() {
 											progVal = x / target;
+											updateText = "$" + x;
+											me.progressBar.updatedText = updateText;
 											me.progressBar.updateProgress(progVal);
-											me.progressBar.updateText("$" + x)
+											me.progressBar.updateText(updateText)
 											diff--;
 											if(diff <= 0) {
 												diffCmp.setHtml("<span class='fa fa-info-circle'></span> You have reached your target! Congratulations!");
