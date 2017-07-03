@@ -24,6 +24,7 @@ Ext.define('ProgressDemo.view.main.Main', {
 
 	progressBar: null,
 	win: null,
+	intervalId: null,
 	initComponent: function() {
 		var me = this;
 
@@ -146,7 +147,7 @@ Ext.define('ProgressDemo.view.main.Main', {
 											diffCmp.setHtml(Ext.String.format(diffCmp.htmlTpl, diff));
 											x = start;
 											
-											var intervalId = setInterval(function() {
+											me.intervalId = setInterval(function() {
 												progVal = x / target;
 												me.progressBar.updateProgress(progVal);
 												me.progressBar.updateText("$" + x)
@@ -159,7 +160,7 @@ Ext.define('ProgressDemo.view.main.Main', {
 												x++;
 												if(x > target) {
 													me.progressBar.updateText("$" + target);
-													clearInterval(intervalId);
+													clearInterval(me.intervalId);
 												}
 											}, 100);											
 										},
@@ -169,6 +170,20 @@ Ext.define('ProgressDemo.view.main.Main', {
 							},
 							
 							listeners: {
+								
+								beforedestroy: {
+									fn: function(cmp) {
+										if(this.intervalId) {
+											clearInterval(this.intervalId);
+										}
+										this.intervalId = null;
+										this.win = null;
+										this.progressBar = null;
+										
+									},
+									scope: me
+								},
+								
 								afterrender: {
 									fn: function(cmp) {
 										var me = this;
@@ -208,7 +223,7 @@ Ext.define('ProgressDemo.view.main.Main', {
 										diffCmp.setHtml(Ext.String.format(diffCmp.htmlTpl, diff));
 										x = start;
 										
-										var intervalId = setInterval(function() {
+										me.intervalId = setInterval(function() {
 											progVal = x / target;
 											updateText = "$" + x;
 											me.progressBar.updatedText = updateText;
@@ -223,7 +238,7 @@ Ext.define('ProgressDemo.view.main.Main', {
 											x++;
 											if(x == 56) {
 												me.progressBar.updateText("$56");
-												clearInterval(intervalId);
+												clearInterval(me.intervalId);
 											}
 										}, 100);
 										
