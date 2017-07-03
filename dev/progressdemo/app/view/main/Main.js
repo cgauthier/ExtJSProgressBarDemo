@@ -112,7 +112,7 @@ Ext.define('ProgressDemo.view.main.Main', {
 									xtype: 'box',
 									flex: 1,
 									target: 'diff',
-									htmlTpl: "<span class='fa fa-info-circle'></span> You need ${0} more to reach you target.",
+									htmlTpl: "<span class='fa fa-info-circle'></span> You need ${0} more to reach your target.",
 									html: "",
 									style: "text-align: center; font-weight:bold;"
 								
