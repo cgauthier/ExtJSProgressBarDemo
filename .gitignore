@@ -1,0 +1,10 @@
+apps
+apps/
+apps*
+build
+build/
+build*
+ext
+ext/
+ext*
+.project
