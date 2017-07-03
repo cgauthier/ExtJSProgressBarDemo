@@ -33,7 +33,7 @@ Ext.define('ProgressDemo.view.main.Main', {
 			type: "fit"
 		};
 		me.bodyPadding = "20";
-		me.html = "Sample Demo answering Question number 31 in Test for ExtJS developer position";
+		me.html = "Sample Demo demonstrating the use of a ProgressBar widget in ExtJS 6.5.0";
 		
 		me.bbar = {
 			xtype: 'toolbar',
@@ -136,8 +136,11 @@ Ext.define('ProgressDemo.view.main.Main', {
 								}, {
 									xtype: 'button',
 									text: "Achieve your target",
+									action: 'target',
+									disabled: true,
 									listeners: {
 										click: function(btn) {
+											btn.disable();
 											var x, start = 56, target = 125, progVal, diff = target - start, me = this, cmp = me.win;
 											
 											var successCmp = cmp.down('box[target="success"]');
@@ -187,7 +190,7 @@ Ext.define('ProgressDemo.view.main.Main', {
 								afterrender: {
 									fn: function(cmp) {
 										var me = this;
-
+										var targetBtn = cmp.down('button[action="target"]');
 										me.progressBar = Ext.create('Ext.ProgressBar', {
 											renderTo: cmp.down('box[target="progress"]').getEl(),
 											height: 100,
@@ -238,6 +241,7 @@ Ext.define('ProgressDemo.view.main.Main', {
 											x++;
 											if(x == 56) {
 												me.progressBar.updateText("$56");
+												targetBtn.enable();
 												clearInterval(me.intervalId);
 											}
 										}, 100);
