@@ -41,6 +41,7 @@ Ext.define('ProgressDemo.view.main.Main', {
 				xtype: "tbfill"
 			}, {
 				xtype: 'button',
+				action: 'verify',
 				text: 'Verify your progress',
 				listeners: {
 					click: function(btn) {
@@ -50,6 +51,7 @@ Ext.define('ProgressDemo.view.main.Main', {
 							height: 300,
 							title: "Your Progress",
 							bodyPadding: "20",
+							launchBtn: btn,
 							layout: {
 								type: "vbox",
 								align: 'stretch'
@@ -165,7 +167,7 @@ Ext.define('ProgressDemo.view.main.Main', {
 													me.progressBar.updateText("$" + target);
 													clearInterval(me.intervalId);
 												}
-											}, 100);											
+											}, 50);											
 										},
 										scope: me
 									}
@@ -180,6 +182,7 @@ Ext.define('ProgressDemo.view.main.Main', {
 											clearInterval(this.intervalId);
 										}
 										this.intervalId = null;
+										this.win.launchBtn.enable();
 										this.win = null;
 										this.progressBar = null;
 										
@@ -244,7 +247,7 @@ Ext.define('ProgressDemo.view.main.Main', {
 												targetBtn.enable();
 												clearInterval(me.intervalId);
 											}
-										}, 100);
+										}, 50);
 										
 									},
 									scope: me
@@ -253,6 +256,7 @@ Ext.define('ProgressDemo.view.main.Main', {
 						});
 						
 						me.win.show();
+						btn.disable();
 						
 					},
 					scope: me
